@@ -1,0 +1,244 @@
+import { Model, Sequelize, FindOptions } from "sequelize";
+import EncryptionService from "@infrastructure/Service/EncryptionService/EncryptionService";
+
+interface UserAttributes {
+  userId: string;
+  firstName: string | null;
+  lastName: string | null;
+  userName: string | null;
+  email: string;
+  password?: string | null;
+  address: string | null;
+  apartment: string | null;
+  city: string | null;
+  state: string | null;
+  zipCode: string | null;
+  dob: Date | null;
+  phoneNumber: string | null;
+  facebook: string | null;
+  linkedIn: string | null;
+  twitter: string | null;
+  instagram: string | null;
+  website: string | null;
+  ssn: string | null;
+  prefix: string | null;
+  isVerified: string | null;
+  detailSubmittedDate: Date | null;
+  notificationToken: string | null;
+  isEmailVerified: string | null;
+  idVerifiedPrompt: boolean | null;
+  portfolioVisited: boolean | null;
+  ncPartyId: string | null;
+  optOutOfEmail: Date | null;
+  moneyMadeId: string | null;
+  shouldVerifySsn: boolean;
+  isSsnVerified: boolean;
+  country: string | null;
+  isIntermediary: boolean | null;
+  tos: boolean | null;
+  optIn: boolean | null;
+  businessOwner: boolean;
+  lastPrompt: Date | null;
+  vcCustomerId: string | null;
+  stripeCustomerId: string | null;
+  idologyIdNumber: string | null;
+  stripePaymentMethodId: string | null;
+  signUpType: string | null;
+  fcmToken: string | null;
+  isBiometricEnabled: boolean | null;
+  biometricKey: string | null;
+  vcThreadBankCustomerId: string | null;
+  isRaisegreen: boolean | null;
+  kycProvider: string | null;
+}
+
+export class User extends Model<UserAttributes> implements UserAttributes {
+  public userId!: string;
+  public firstName!: string | null;
+  public lastName!: string | null;
+  public userName!: string | null;
+  public email!: string;
+  public password!: string | null;
+  public address!: string | null;
+  public apartment!: string | null;
+  public city!: string | null;
+  public state!: string | null;
+  public zipCode!: string | null;
+  public dob!: Date | null;
+  public phoneNumber!: string | null;
+  public facebook!: string | null;
+  public linkedIn!: string | null;
+  public twitter!: string | null;
+  public instagram!: string | null;
+  public website!: string | null;
+  public ssn!: string | null;
+  public prefix!: string | null;
+  public isVerified!: string | null;
+  public detailSubmittedDate!: Date | null;
+  public notificationToken!: string | null;
+  public isEmailVerified!: string | null;
+  public idVerifiedPrompt!: boolean | null;
+  public portfolioVisited!: boolean | null;
+  public ncPartyId!: string | null;
+  public optOutOfEmail!: Date | null;
+  public moneyMadeId!: string | null;
+  public shouldVerifySsn!: boolean;
+  public isSsnVerified!: boolean;
+  public country!: string | null;
+  public isIntermediary!: boolean | null;
+  public tos!: boolean | null;
+  public optIn!: boolean | null;
+  public businessOwner!: boolean;
+  public lastPrompt!: Date | null;
+  public vcCustomerId!: string | null;
+  public stripeCustomerId!: string | null;
+  public idologyIdNumber!: string | null;
+  public stripePaymentMethodId!: string | null;
+  public signUpType!: string | null;
+  public fcmToken!: string | null;
+  public isBiometricEnabled!: boolean | null;
+  public biometricKey!: string | null;
+  public vcThreadBankCustomerId!: string | null;
+  public isRaisegreen!: boolean | null;
+  public kycProvider!: string | null;
+  public readonly createdAt!: Date;
+  public readonly updatedAt!: Date;
+  public readonly deletedAt!: Date;
+
+  public investor?: any;
+
+  public static associate(models: any) {
+    this.hasOne(models.ProfilePic, { foreignKey: "userId", as: "profilePic" });
+    this.hasOne(models.Owner, {
+      onDelete: "cascade",
+      foreignKey: "userId",
+      as: "owner",
+    });
+
+    // this.hasOne(models.Investor, { onDelete: "cascade", foreignKey: "userId" });
+    // models.Investor.belongsTo(this, { foreignKey: "userId" });
+    this.hasMany(models.UserDocument, { foreignKey: "userId" });
+
+    this.hasMany(models.EntityIntermediary, { foreignKey: "userId" });
+    // this.hasMany(models.HoneycombDwollaConsent, { foreignKey: "userId" });
+    // this.hasMany(models.HoneycombDwollaCustomer, { foreignKey: "userId" });
+  }
+
+  private encryptSsn() {
+    if (this.ssn) {
+      this.ssn = EncryptionService.encryptSsn(this.ssn);
+    }
+  }
+
+  private decryptSsn() {
+    if (this.ssn && this.ssn !== "null") {
+      this.ssn = EncryptionService.decryptSsn(this.ssn);
+    }
+  }
+}
+
+export default (sequelize: Sequelize, DataTypes: any) => {
+  User.init(
+    {
+      userId: { type: DataTypes.STRING, primaryKey: true, allowNull: false },
+      firstName: { type: DataTypes.STRING },
+      lastName: { type: DataTypes.STRING },
+      userName: { type: DataTypes.STRING },
+      email: { type: DataTypes.STRING, allowNull: false, unique: true },
+      password: { type: DataTypes.STRING },
+      address: { type: DataTypes.STRING },
+      apartment: { type: DataTypes.STRING },
+      city: { type: DataTypes.STRING },
+      state: { type: DataTypes.STRING },
+      zipCode: { type: DataTypes.STRING },
+      dob: { type: DataTypes.DATEONLY },
+      phoneNumber: { type: DataTypes.STRING },
+      facebook: { type: DataTypes.STRING },
+      linkedIn: { type: DataTypes.STRING },
+      twitter: { type: DataTypes.STRING },
+      instagram: { type: DataTypes.STRING },
+      website: { type: DataTypes.STRING },
+      ssn: { type: DataTypes.STRING },
+      prefix: { type: DataTypes.STRING },
+      isVerified: { type: DataTypes.STRING },
+      detailSubmittedDate: { type: DataTypes.DATE },
+      notificationToken: { type: DataTypes.STRING },
+      isEmailVerified: { type: DataTypes.STRING },
+      idVerifiedPrompt: { type: DataTypes.BOOLEAN },
+      portfolioVisited: { type: DataTypes.BOOLEAN },
+      ncPartyId: { type: DataTypes.STRING },
+      optOutOfEmail: { type: DataTypes.DATE },
+      moneyMadeId: { type: DataTypes.STRING },
+      shouldVerifySsn: { type: DataTypes.BOOLEAN, defaultValue: false },
+      isSsnVerified: { type: DataTypes.BOOLEAN, defaultValue: true },
+      country: { type: DataTypes.STRING },
+      isIntermediary: { type: DataTypes.BOOLEAN },
+      tos: { type: DataTypes.BOOLEAN },
+      optIn: { type: DataTypes.BOOLEAN },
+      businessOwner: { type: DataTypes.BOOLEAN, defaultValue: false },
+      lastPrompt: { type: DataTypes.DATE },
+      vcCustomerId: { type: DataTypes.STRING },
+      stripeCustomerId: { type: DataTypes.STRING },
+      idologyIdNumber: { type: DataTypes.STRING },
+      stripePaymentMethodId: { type: DataTypes.STRING },
+      signUpType: { type: DataTypes.STRING },
+      fcmToken: { type: DataTypes.STRING },
+      isBiometricEnabled: { type: DataTypes.BOOLEAN },
+      biometricKey: { type: DataTypes.STRING },
+      vcThreadBankCustomerId: { type: DataTypes.STRING },
+      isRaisegreen: { type: DataTypes.BOOLEAN },
+      kycProvider: { type: DataTypes.STRING, allowNull: true },
+    },
+    {
+      sequelize,
+      modelName: "User",
+      tableName: "users",
+      timestamps: true,
+      paranoid: true,
+      hooks: {
+        beforeCreate(user: User) {
+          user["encryptSsn"]();
+        },
+        beforeUpdate(user: User) {
+          if (user.changed("ssn")) {
+            user["encryptSsn"]();
+          }
+        },
+        beforeFind(options: FindOptions) {
+          if (options.where && options.where["ssn"]) {
+            options.where["ssn"] = EncryptionService.encryptSsn(
+              options.where["ssn"] as string
+            );
+          }
+        },
+        afterFind(result: User | User[] | null) {
+          if (!result) return;
+
+          const decryptRecord = (record: User) => {
+            record["decryptSsn"]();
+            if (record.investor && record.investor.investorBank) {
+              if (Array.isArray(record.investor.investorBank)) {
+                record.investor.investorBank.forEach((po: any) => {
+                  if (po.bank && typeof po.bank.decrypt === "function") {
+                    po.bank.decrypt();
+                  }
+                  if (po.card && typeof po.card.decrypt === "function") {
+                    po.card.decrypt();
+                  }
+                });
+              }
+            }
+          };
+
+          if (Array.isArray(result)) {
+            result.forEach(decryptRecord);
+          } else {
+            decryptRecord(result);
+          }
+        },
+      },
+    }
+  );
+
+  return User;
+};
