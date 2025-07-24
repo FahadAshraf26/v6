@@ -12,7 +12,6 @@ export class AdminUser
   extends Model<AdminUserAttributes>
   implements AdminUserAttributes
 {
-  // These properties are explicitly declared for TypeScript's benefit.
   public adminUserId!: string;
   public name!: string | null;
   public email!: string | null;
@@ -26,6 +25,11 @@ export class AdminUser
       foreignKey: "adminRoleId",
       as: "role",
       onDelete: "cascade",
+    });
+
+    this.hasMany(models.InvestmentAuditLog, {
+      foreignKey: "adminUserId",
+      as: "investmentAuditLogs",
     });
   }
 }

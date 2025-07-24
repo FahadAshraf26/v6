@@ -9,7 +9,6 @@ export class AdminRole
   extends Model<AdminRoleAttributes>
   implements AdminRoleAttributes
 {
-  // These properties are explicitly declared for TypeScript's benefit.
   public adminRoleId!: string;
   public name!: string | null;
   public readonly createdAt!: Date;

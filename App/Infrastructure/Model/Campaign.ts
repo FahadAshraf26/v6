@@ -281,7 +281,6 @@ export class Campaign
 
     // Repayments
     this.hasMany(models.Repayment, { foreignKey: "campaignId" });
-    models.Repayment.belongsTo(this, { foreignKey: "campaignId" });
 
     // Investor Payments
     this.hasMany(models.InvestorPayments, { foreignKey: "campaignId" });
@@ -300,6 +299,11 @@ export class Campaign
     this.hasOne(models.CampaignAddress, {
       foreignKey: "campaignId",
       as: "campaignAddress",
+    });
+
+    this.hasMany(models.InvestmentAuditLog, {
+      foreignKey: "campaignId",
+      as: "investmentAuditLogs",
     });
   }
 }

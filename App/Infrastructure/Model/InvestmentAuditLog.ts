@@ -1,6 +1,5 @@
-import { Model, DataTypes, Sequelize } from "sequelize";
+import { Model, Sequelize } from "sequelize";
 
-// Interface for type-safety on instance attributes
 interface InvestmentAuditLogAttributes {
   investmentAuditLogId: string;
   campaignFundId: string;
@@ -8,16 +7,14 @@ interface InvestmentAuditLogAttributes {
   adminUserEmail: string;
   campaignId: string;
   investorEmail: string;
-  changes: any; // Or a more specific type for your JSON structure
+  changes: any;
   timestamp: Date;
 }
 
-// Extend Sequelize's Model class and implement our attributes interface
 export class InvestmentAuditLog
   extends Model<InvestmentAuditLogAttributes>
   implements InvestmentAuditLogAttributes
 {
-  // --- TYPE DEFINITIONS ---
   public investmentAuditLogId!: string;
   public campaignFundId!: string;
   public adminUserId!: string;
@@ -27,17 +24,14 @@ export class InvestmentAuditLog
   public changes!: any;
   public timestamp!: Date;
 
-  // Timestamps
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
 
-  // --- Association-related property declarations ---
-  public readonly campaignFund?: any; // Replace with CampaignFund class
-  public readonly adminUser?: any; // Replace with AdminUser class
-  public readonly campaign?: any; // Replace with Campaign class
+  public readonly campaignFund?: any;
+  public readonly adminUser?: any;
+  public readonly campaign?: any;
 
-  // --- STATIC ASSOCIATE METHOD ---
   public static associate(models: any) {
     this.belongsTo(models.CampaignFund, {
       foreignKey: "campaignFundId",
@@ -56,11 +50,9 @@ export class InvestmentAuditLog
   }
 }
 
-// The exported initialization function
 export default (sequelize: Sequelize, DataTypes: any) => {
   InvestmentAuditLog.init(
     {
-      // --- RUNTIME DEFINITIONS ---
       investmentAuditLogId: {
         type: DataTypes.STRING,
         primaryKey: true,
@@ -79,7 +71,6 @@ export default (sequelize: Sequelize, DataTypes: any) => {
       },
     },
     {
-      // --- Model Options ---
       sequelize,
       modelName: "InvestmentAuditLog",
       tableName: "investmentAuditLogs",

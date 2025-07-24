@@ -12,7 +12,6 @@ export class ProfilePic
   extends Model<ProfilePicAttributes>
   implements ProfilePicAttributes
 {
-  // These properties are explicitly declared for TypeScript's benefit.
   public profilePicId!: string;
   public name!: string;
   public path!: string;

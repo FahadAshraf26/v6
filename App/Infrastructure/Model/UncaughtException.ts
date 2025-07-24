@@ -11,7 +11,6 @@ export class UncaughtException
   extends Model<UncaughtExceptionAttributes>
   implements UncaughtExceptionAttributes
 {
-  // These properties are explicitly declared for TypeScript's benefit.
   public uncaughtExceptionId!: string;
   public message!: string;
   public type!: string;

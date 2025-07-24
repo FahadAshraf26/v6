@@ -1,12 +1,5 @@
-import { Model, DataTypes, Sequelize } from "sequelize";
+import { Model, Sequelize } from "sequelize";
 
-// It's good practice to import the types of associated models for strong typing
-// For brevity, these are just placeholders. You would import the actual classes.
-// import { Naic } from './Naic';
-// import { Owner } from './Owner';
-// ... and so on
-
-// Interface for type-safety on instance attributes
 interface IssuerAttributes {
   issuerId: string;
   issuerName: string;
@@ -32,15 +25,13 @@ interface IssuerAttributes {
   previousName: string | null;
   ncIssuerId: string | null;
   country: string | null;
-  naicId?: string; // Foreign key
+  naicId?: string;
 }
 
-// Extend Sequelize's Model class and implement our attributes interface
 export class Issuer
   extends Model<IssuerAttributes>
   implements IssuerAttributes
 {
-  // --- TYPE DEFINITIONS ---
   public issuerId!: string;
   public issuerName!: string;
   public physicalAddress!: string;
@@ -66,41 +57,24 @@ export class Issuer
   public ncIssuerId!: string | null;
   public country!: string | null;
 
-  // Foreign keys and associations
   public naicId!: string;
 
-  // Timestamps
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
 
-  // --- STATIC ASSOCIATE METHOD ---
   public static associate(models: any) {
-    // Note: All `...Model` suffixes have been removed from the model names
-    // and `IssuerModel` is replaced with `this`.
-
-    models.Naic.hasMany(this, { foreignKey: "naicId", as: "issuers" });
     this.belongsTo(models.Naic, { foreignKey: "naicId", as: "naic" });
-
-    models.Owner.belongsToMany(this, {
-      through: models.IssuerOwner,
-      as: "issuers",
-      foreignKey: "ownerId",
-    });
     this.belongsToMany(models.Owner, {
       through: models.IssuerOwner,
       as: "owners",
       foreignKey: "issuerId",
     });
-
-    models.IssuerBank.belongsTo(this, { foreignKey: "issuerId" });
-    this.hasMany(models.IssuerBank, { foreignKey: "issuerId" });
-
-    // issuer Documents
+    this.hasMany(models.IssuerBank, {
+      foreignKey: "issuerId",
+      as: "issuerBank",
+    });
     this.hasMany(models.IssuerDocument, { foreignKey: "issuerId" });
-    models.IssuerDocument.belongsTo(this, { foreignKey: "issuerId" });
-
-    // Entity Intermediary
     this.hasMany(models.EntityIntermediary, { foreignKey: "issuerId" });
     this.hasMany(models.HoneycombDwollaConsent, { foreignKey: "issuerId" });
     this.hasMany(models.HoneycombDwollaCustomer, { foreignKey: "issuerId" });
@@ -114,7 +88,6 @@ export class Issuer
       constraints: false,
     });
 
-    // --- Preserving commented-out association ---
     // models.EntityCampaignFund.hasMany(this, {
     //   as: 'entity',
     //   foreignKey: 'issuerId',
@@ -122,11 +95,9 @@ export class Issuer
   }
 }
 
-// The exported initialization function
 export default (sequelize: Sequelize, DataTypes: any) => {
   Issuer.init(
     {
-      // --- RUNTIME DEFINITIONS ---
       issuerId: { type: DataTypes.STRING, primaryKey: true, allowNull: false },
       issuerName: { type: DataTypes.STRING, allowNull: false },
       physicalAddress: { type: DataTypes.STRING, allowNull: false },
@@ -153,10 +124,9 @@ export default (sequelize: Sequelize, DataTypes: any) => {
       country: { type: DataTypes.STRING },
     },
     {
-      // --- Model Options ---
       sequelize,
       modelName: "Issuer",
-      tableName: "issuers", // Explicitly set table name
+      tableName: "issuers",
       timestamps: true,
       paranoid: true,
     }

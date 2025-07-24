@@ -1,11 +1,5 @@
-import {
-  Model,
-  DataTypes,
-  Sequelize,
-  HasOneGetAssociationMixin,
-} from "sequelize";
+import { Model, Sequelize, HasOneGetAssociationMixin } from "sequelize";
 
-// Interface for type-safety on instance attributes
 interface HoneycombDwollaCustomerAttributes {
   honeycombDwollaCustomerId: string | null;
   dwollaCustomerId: string;
@@ -18,12 +12,10 @@ interface HoneycombDwollaCustomerAttributes {
   issuerId?: string;
 }
 
-// Extend Sequelize's Model class and implement our attributes interface
 export class HoneycombDwollaCustomer
   extends Model<HoneycombDwollaCustomerAttributes>
   implements HoneycombDwollaCustomerAttributes
 {
-  // --- TYPE DEFINITIONS (The Update) ---
   public honeycombDwollaCustomerId!: string | null;
   public dwollaCustomerId!: string;
   public customerType!: string | null;
@@ -32,19 +24,15 @@ export class HoneycombDwollaCustomer
   public dwollaBalanceId!: string | null;
   public dwollaDocumentId!: string | null;
 
-  // Foreign Keys
   public userId!: string;
   public issuerId!: string;
 
-  // Timestamps
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
 
-  // --- Association mixin methods ---
   public getHoneycombDwollaBeneficialOwner!: HasOneGetAssociationMixin<any>; // Replace 'any' with HoneycombDwollaBeneficialOwner class
 
-  // --- STATIC ASSOCIATE METHOD ---
   public static associate(models: any) {
     this.belongsTo(models.User, {
       foreignKey: "userId",
@@ -60,11 +48,9 @@ export class HoneycombDwollaCustomer
   }
 }
 
-// The exported initialization function
 export default (sequelize: Sequelize, DataTypes: any) => {
   HoneycombDwollaCustomer.init(
     {
-      // --- RUNTIME DEFINITIONS ---
       honeycombDwollaCustomerId: {
         type: DataTypes.STRING,
       },
@@ -92,7 +78,6 @@ export default (sequelize: Sequelize, DataTypes: any) => {
       },
     },
     {
-      // --- Model Options ---
       sequelize,
       modelName: "HoneycombDwollaCustomer",
       tableName: "honeycombDwollaCustomers",

@@ -25,12 +25,18 @@ export class Owner extends Model<OwnerAttributes> implements OwnerAttributes {
   public readonly deletedAt!: Date;
 
   public static associate(models: any) {
+    this.belongsToMany(models.Issuer, {
+      through: models.IssuerOwner,
+      as: "issuers",
+      foreignKey: "ownerId",
+    });
+
     this.belongsTo(models.User, { foreignKey: "userId", as: "user" });
 
-    // this.hasOne(models.HoneycombDwollaBeneficialOwner, {
-    //   foreignKey: "ownerId",
-    //   as: "dwollaBeneficialOwner",
-    // });
+    this.hasOne(models.HoneycombDwollaBeneficialOwner, {
+      foreignKey: "ownerId",
+      as: "dwollaBeneficialOwner",
+    });
   }
 }
 

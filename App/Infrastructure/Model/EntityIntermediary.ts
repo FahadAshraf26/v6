@@ -12,7 +12,6 @@ export class EntityIntermediary
   extends Model<EntityIntermediaryAttributes>
   implements EntityIntermediaryAttributes
 {
-  // These properties are explicitly declared for TypeScript's benefit.
   public entityIntermediaryId!: string;
   public operatorAgreementApproved!: boolean;
   public intermediaryName!: string;
@@ -26,9 +25,9 @@ export class EntityIntermediary
     this.belongsTo(models.User, {
       foreignKey: "userId",
     });
-    // this.belongsTo(models.Issuer, {
-    //   foreignKey: "issuerId",
-    // });
+    this.belongsTo(models.Issuer, {
+      foreignKey: "issuerId",
+    });
   }
 }
 

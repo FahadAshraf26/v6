@@ -1,10 +1,5 @@
-import { Model, DataTypes, Sequelize } from "sequelize";
+import { Model, Sequelize } from "sequelize";
 import EncryptionService from "../Service/EncryptionService/EncryptionService";
-// Placeholders for associated model imports
-// import { Issuer } from './Issuer';
-// import { DwollaFundingSourceVerification } from './DwollaFundingSourceVerification';
-
-// Interface for type-safety on instance attributes
 interface IssuerBankAttributes {
   issuerBankId: string;
   accountType: string | null;
@@ -20,12 +15,10 @@ interface IssuerBankAttributes {
   issuerId?: string;
 }
 
-// Extend Sequelize's Model class and implement our attributes interface
 export class IssuerBank
   extends Model<IssuerBankAttributes>
   implements IssuerBankAttributes
 {
-  // --- TYPE DEFINITIONS ---
   public issuerBankId!: string;
   public accountType!: string | null;
   public dwollaSourceId!: string | null;
@@ -38,26 +31,19 @@ export class IssuerBank
   public bankToken!: string | null;
   public wireRoutingNumber!: string | null;
 
-  // Foreign keys
   public issuerId!: string;
 
-  // Timestamps
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
 
-  // --- STATIC ASSOCIATE METHOD ---
   public static associate(models: any) {
-    // Note: All `...Model` suffixes have been removed from the model names
-    // and `IssuerBankModel` is replaced with `this`.
     this.belongsTo(models.Issuer, { foreignKey: "issuerId" });
-    models.Issuer.hasOne(this, { foreignKey: "issuerId", as: "issuerBank" });
-    // this.hasOne(models.DwollaFundingSourceVerification, {
-    //   foreignKey: "dwollaSourceId",
-    // });
+    this.hasOne(models.DwollaFundingSourceVerification, {
+      foreignKey: "dwollaSourceId",
+    });
   }
 
-  // --- INSTANCE METHODS ---
   private encrypt() {
     try {
       if (this.routingNumber) {
@@ -103,11 +89,9 @@ export class IssuerBank
   }
 }
 
-// The exported initialization function
 export default (sequelize: Sequelize, DataTypes: any) => {
   IssuerBank.init(
     {
-      // --- RUNTIME DEFINITIONS ---
       issuerBankId: {
         type: DataTypes.STRING,
         primaryKey: true,
@@ -125,16 +109,14 @@ export default (sequelize: Sequelize, DataTypes: any) => {
       wireRoutingNumber: { type: DataTypes.STRING },
     },
     {
-      // --- Model Options ---
       sequelize,
       modelName: "IssuerBank",
       tableName: "issuerBanks",
       timestamps: true,
       paranoid: true,
-      // --- HOOKS ---
       hooks: {
         beforeCreate(issuerBank: IssuerBank) {
-          issuerBank["encrypt"](); // Use bracket notation to access private method
+          issuerBank["encrypt"]();
         },
         beforeUpdate(issuerBank: IssuerBank) {
           if (

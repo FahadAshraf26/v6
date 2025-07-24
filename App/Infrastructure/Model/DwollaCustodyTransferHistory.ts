@@ -1,11 +1,5 @@
-import {
-  Model,
-  DataTypes,
-  Sequelize,
-  HasManyGetAssociationsMixin,
-} from "sequelize";
+import { Model, Sequelize } from "sequelize";
 
-// Interface for type-safety on instance attributes
 interface DwollaCustodyTransferHistoryAttributes {
   dwollaCustodyTransferHistoryId: string;
   source: string | null;
@@ -17,12 +11,10 @@ interface DwollaCustodyTransferHistoryAttributes {
   issuerId?: string;
 }
 
-// Extend Sequelize's Model class and implement our attributes interface
 export class DwollaCustodyTransferHistory
   extends Model<DwollaCustodyTransferHistoryAttributes>
   implements DwollaCustodyTransferHistoryAttributes
 {
-  // --- TYPE DEFINITIONS (The Update) ---
   public dwollaCustodyTransferHistoryId!: string;
   public source!: string | null;
   public destination!: string | null;
@@ -31,18 +23,12 @@ export class DwollaCustodyTransferHistory
   public businessOwnerEmail!: string | null;
   public amount!: number | null;
 
-  // Foreign Key
   public issuerId!: string;
 
-  // Timestamps
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
 
-  // --- Association mixin methods ---
-  public getDwollaPostBankTransactions!: HasManyGetAssociationsMixin<any>; // Replace 'any' with DwollaPostBankTransactions class
-
-  // --- STATIC ASSOCIATE METHOD ---
   public static associate(models: any) {
     this.belongsTo(models.Issuer, {
       foreignKey: "issuerId",
@@ -56,11 +42,9 @@ export class DwollaCustodyTransferHistory
   }
 }
 
-// The exported initialization function
 export default (sequelize: Sequelize, DataTypes: any) => {
   DwollaCustodyTransferHistory.init(
     {
-      // --- RUNTIME DEFINITIONS ---
       dwollaCustodyTransferHistoryId: {
         type: DataTypes.STRING,
         primaryKey: true,
@@ -73,7 +57,6 @@ export default (sequelize: Sequelize, DataTypes: any) => {
       amount: { type: DataTypes.FLOAT },
     },
     {
-      // --- Model Options ---
       sequelize,
       modelName: "DwollaCustodyTransferHistory",
       tableName: "dwollaCustodyTransferHistories",

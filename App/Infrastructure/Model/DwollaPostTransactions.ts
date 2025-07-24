@@ -1,6 +1,5 @@
-import { Model, DataTypes, Sequelize } from "sequelize";
+import { Model, Sequelize } from "sequelize";
 
-// Interface for type-safety on instance attributes
 interface DwollaPostTransactionsAttributes {
   dwollaPostTransactionId: string;
   source: string | null;
@@ -16,12 +15,10 @@ interface DwollaPostTransactionsAttributes {
   dwollaPreTransactionId?: string;
 }
 
-// Extend Sequelize's Model class and implement our attributes interface
 export class DwollaPostTransactions
   extends Model<DwollaPostTransactionsAttributes>
   implements DwollaPostTransactionsAttributes
 {
-  // --- TYPE DEFINITIONS (The Update) ---
   public dwollaPostTransactionId!: string;
   public source!: string | null;
   public destination!: string | null;
@@ -33,16 +30,13 @@ export class DwollaPostTransactions
   public dwollaTransferId!: string | null;
   public fileName!: string | null;
 
-  // Foreign Keys
   public issuerId!: string;
   public dwollaPreTransactionId!: string;
 
-  // Timestamps
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
 
-  // --- STATIC ASSOCIATE METHOD ---
   public static associate(models: any) {
     this.belongsTo(models.Issuer, {
       foreignKey: "issuerId",
@@ -54,11 +48,9 @@ export class DwollaPostTransactions
   }
 }
 
-// The exported initialization function
 export default (sequelize: Sequelize, DataTypes: any) => {
   DwollaPostTransactions.init(
     {
-      // --- RUNTIME DEFINITIONS ---
       dwollaPostTransactionId: {
         type: DataTypes.STRING,
         primaryKey: true,
@@ -74,7 +66,6 @@ export default (sequelize: Sequelize, DataTypes: any) => {
       fileName: { type: DataTypes.STRING },
     },
     {
-      // --- Model Options ---
       sequelize,
       modelName: "DwollaPostTransactions",
       tableName: "dwollaPostTransactions",

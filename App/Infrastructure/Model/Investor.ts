@@ -1,11 +1,5 @@
-import {
-  Model,
-  DataTypes,
-  Sequelize,
-  HasManyGetAssociationsMixin,
-} from "sequelize";
+import { Model, Sequelize } from "sequelize";
 
-// Interface for type-safety on instance attributes
 interface InvestorAttributes {
   investorId: string;
   annualIncome: number;
@@ -31,12 +25,10 @@ interface InvestorAttributes {
   userId?: string;
 }
 
-// Extend Sequelize's Model class and implement our attributes interface
 export class Investor
   extends Model<InvestorAttributes>
   implements InvestorAttributes
 {
-  // --- TYPE DEFINITIONS (The Update) ---
   public investorId!: string;
   public annualIncome!: number;
   public netWorth!: number;
@@ -59,45 +51,32 @@ export class Investor
   public vcCustomerKey!: string | null;
   public vcThreadBankCustomerKey!: string | null;
 
-  // Foreign Key
   public userId!: string;
 
-  // Timestamps
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
 
-  // --- Association-related property declarations ---
-  public readonly userSender?: any; // Replace 'any' with User class
+  public readonly userSender?: any;
 
-  // --- Association mixin methods ---
-  public getCampaignFunds!: HasManyGetAssociationsMixin<any>; // Replace 'any' with CampaignFund class
-  public getRepayments!: HasManyGetAssociationsMixin<any>; // Replace 'any' with Repayment class
-  // ... and so on for other hasMany associations
-
-  // --- STATIC ASSOCIATE METHOD ---
   public static associate(models: any) {
-    models.CampaignFund.belongsTo(this, { foreignKey: "investorId" });
     this.hasMany(models.CampaignFund, { foreignKey: "investorId" });
-
-    models.User.hasOne(this, { foreignKey: "userId", as: "userSender" });
-
-    models.Repayment.belongsTo(this, { foreignKey: "investorId" });
+    this.hasMany(models.InvestorAccreditation, {
+      foreignKey: "investorId",
+      as: "investorAccreditation",
+    });
+    // models.User.hasOne(this, { foreignKey: "userId", as: "userSender" });
+    this.belongsTo(models.User, { foreignKey: "userId" });
     this.hasMany(models.Repayment, { foreignKey: "investorId" });
-
-    models.InvestorPayments.belongsTo(this, { foreignKey: "investorId" });
     this.hasMany(models.InvestorPayments, { foreignKey: "investorId" });
-
     this.hasMany(models.CampaignNotification, { foreignKey: "investorId" });
     this.hasMany(models.FavoriteCampaign, { foreignKey: "investorId" });
   }
 }
 
-// The exported initialization function
 export default (sequelize: Sequelize, DataTypes: any) => {
   Investor.init(
     {
-      // --- RUNTIME DEFINITIONS ---
       investorId: {
         type: DataTypes.STRING,
         primaryKey: true,
@@ -131,7 +110,6 @@ export default (sequelize: Sequelize, DataTypes: any) => {
       vcThreadBankCustomerKey: { type: DataTypes.STRING },
     },
     {
-      // --- Model Options ---
       sequelize,
       modelName: "Investor",
       tableName: "investors",

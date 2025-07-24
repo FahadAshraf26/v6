@@ -8,7 +8,6 @@ export class RepaymentsUpdate
   extends Model<RepaymentsUpdateAttributes>
   implements RepaymentsUpdateAttributes
 {
-  // These properties are explicitly declared for TypeScript's benefit.
   public repaymentsUpdateId!: string;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;

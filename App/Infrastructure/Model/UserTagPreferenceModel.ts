@@ -1,33 +1,23 @@
-import { Model, DataTypes, Sequelize } from "sequelize";
-// import { User } from './User'; // Placeholder for import
-// import { Tag } from './Tag'; // Placeholder for import
-
-// Interface for type-safety on instance attributes
+import { Model, Sequelize } from "sequelize";
 interface UserTagPreferenceAttributes {
   userTagPreferenceId: string;
   userId: string;
   tagId: string;
 }
 
-// Extend Sequelize's Model class and implement our attributes interface
 export class UserTagPreference
   extends Model<UserTagPreferenceAttributes>
   implements UserTagPreferenceAttributes
 {
-  // --- TYPE DEFINITIONS ---
   public userTagPreferenceId!: string;
   public userId!: string;
   public tagId!: string;
 
-  // Timestamps
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
 
-  // --- STATIC ASSOCIATE METHOD ---
   public static associate(models: any) {
-    // Note: `UserTagPreferenceModel` is replaced with `this`, and
-    // associated model names are updated to their v6 class names.
     this.belongsTo(models.User, {
       foreignKey: "userId",
       as: "user",
@@ -40,11 +30,9 @@ export class UserTagPreference
   }
 }
 
-// The exported initialization function
 export default (sequelize: Sequelize, DataTypes: any) => {
   UserTagPreference.init(
     {
-      // --- RUNTIME DEFINITIONS ---
       userTagPreferenceId: {
         type: DataTypes.STRING,
         primaryKey: true,
@@ -68,25 +56,21 @@ export default (sequelize: Sequelize, DataTypes: any) => {
       },
     },
     {
-      // --- Model Options ---
       sequelize,
       modelName: "UserTagPreference",
       tableName: "userTagPreferences",
       timestamps: true,
       paranoid: true,
-      // --- INDEXES ---
-      // The indexes array is moved into the options object here.
-      // The syntax remains the same.
       indexes: [
         {
           unique: true,
-          fields: ["userId", "tagId"], // Prevent duplicate user-tag combinations
+          fields: ["userId", "tagId"],
         },
         {
-          fields: ["userId"], // Index for faster user lookups
+          fields: ["userId"],
         },
         {
-          fields: ["tagId"], // Index for faster tag lookups
+          fields: ["tagId"],
         },
       ],
     }

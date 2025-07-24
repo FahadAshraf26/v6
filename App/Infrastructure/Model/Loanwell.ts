@@ -10,7 +10,6 @@ export class Loanwell
   extends Model<LoanwellAttributes>
   implements LoanwellAttributes
 {
-  // These properties are explicitly declared for TypeScript's benefit.
   public loanwellId!: string;
   public name!: string;
   public importedBy!: string | null;

@@ -11,7 +11,6 @@ export class UsaEpayWebhook
   extends Model<UsaEpayWebhookAttributes>
   implements UsaEpayWebhookAttributes
 {
-  // These properties are explicitly declared for TypeScript's benefit.
   public webhookId!: string;
   public webhookType!: string | null;
   public status!: string | null;

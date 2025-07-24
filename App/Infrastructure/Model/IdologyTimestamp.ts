@@ -1,6 +1,5 @@
-import { Model, DataTypes, Sequelize } from "sequelize";
+import { Model, Sequelize } from "sequelize";
 
-// Interface for type-safety on instance attributes
 interface IdologyTimestampAttributes {
   idologyTimestampId: string;
   date: Date;
@@ -10,16 +9,14 @@ interface IdologyTimestampAttributes {
   idologyScanUrlExpirationTime: Date | null;
   isResultMatched: boolean | null;
   badActorFlagged: boolean | null;
-  ncResponse: any | null; // Or a more specific type for your JSON structure
+  ncResponse: any | null;
   userId?: string;
 }
 
-// Extend Sequelize's Model class and implement our attributes interface
 export class IdologyTimestamp
   extends Model<IdologyTimestampAttributes>
   implements IdologyTimestampAttributes
 {
-  // --- TYPE DEFINITIONS (The Update) ---
   public idologyTimestampId!: string;
   public date!: Date;
   public isVerified!: string;
@@ -30,24 +27,13 @@ export class IdologyTimestamp
   public badActorFlagged!: boolean | null;
   public ncResponse!: any | null;
 
-  // Foreign Key
   public userId!: string;
 
-  // Timestamps
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
 
-  // --- Association-related property declarations ---
-  public readonly user?: any; // Replace 'any' with User class
-
-  // --- STATIC ASSOCIATE METHOD ---
   public static associate(models: any) {
-    models.User.hasMany(this, {
-      foreignKey: "userId",
-      as: "idologyTimestamps",
-    });
-
     this.belongsTo(models.User, {
       foreignKey: "userId",
       as: "user",
@@ -55,11 +41,9 @@ export class IdologyTimestamp
   }
 }
 
-// The exported initialization function
 export default (sequelize: Sequelize, DataTypes: any) => {
   IdologyTimestamp.init(
     {
-      // --- RUNTIME DEFINITIONS ---
       idologyTimestampId: {
         type: DataTypes.STRING,
         primaryKey: true,
@@ -94,7 +78,6 @@ export default (sequelize: Sequelize, DataTypes: any) => {
       },
     },
     {
-      // --- Model Options ---
       sequelize,
       modelName: "IdologyTimestamp",
       tableName: "idologyTimestamps",

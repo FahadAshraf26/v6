@@ -114,14 +114,28 @@ export class User extends Model<UserAttributes> implements UserAttributes {
       foreignKey: "userId",
       as: "owner",
     });
-
-    // this.hasOne(models.Investor, { onDelete: "cascade", foreignKey: "userId" });
-    // models.Investor.belongsTo(this, { foreignKey: "userId" });
+    this.hasOne(models.Investor, { onDelete: "cascade", foreignKey: "userId" });
     this.hasMany(models.UserDocument, { foreignKey: "userId" });
-
     this.hasMany(models.EntityIntermediary, { foreignKey: "userId" });
-    // this.hasMany(models.HoneycombDwollaConsent, { foreignKey: "userId" });
-    // this.hasMany(models.HoneycombDwollaCustomer, { foreignKey: "userId" });
+    this.hasMany(models.HoneycombDwollaConsent, { foreignKey: "userId" });
+    this.hasMany(models.HoneycombDwollaCustomer, { foreignKey: "userId" });
+    this.hasMany(models.UserTagPreferenceModel, {
+      foreignKey: "userId",
+      as: "tagPreferences",
+    });
+    this.hasMany(models.UserEvent, {
+      foreignKey: "userId",
+      as: "userEvents",
+    });
+    this.hasMany(models.TransactionsHistory, {
+      foreignKey: "userId",
+      as: "userTransactions",
+    });
+
+    this.hasMany(models.IdologyTimestamp, {
+      foreignKey: "userId",
+      as: "idologyTimestamps",
+    });
   }
 
   private encryptSsn() {

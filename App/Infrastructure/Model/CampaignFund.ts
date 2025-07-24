@@ -54,10 +54,7 @@ export class CampaignFund
       as: "investmentCharge",
     });
 
-    models.Investor.hasOne(this, {
-      foreignKey: "investorId",
-      as: "investor",
-    });
+    this.belongsTo(models.Investor, { foreignKey: "investorId" });
 
     models.Campaign.hasOne(this, {
       foreignKey: "campaignId",
@@ -67,6 +64,11 @@ export class CampaignFund
     this.hasMany(models.HybridTransaction, {
       foreignKey: "campaignFundId",
       as: "campaignHybridTransactions",
+    });
+
+    this.hasMany(models.InvestmentAuditLog, {
+      foreignKey: "campaignFundId",
+      as: "investmentAuditLogs",
     });
   }
 }

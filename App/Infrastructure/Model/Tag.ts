@@ -3,7 +3,6 @@ import { Model, Sequelize } from "sequelize";
 interface TagAttributes {
   tagId: string;
   tag: string;
-  // tagCategoryId: string | null;
 }
 
 export class Tag extends Model<TagAttributes> implements TagAttributes {
@@ -12,9 +11,13 @@ export class Tag extends Model<TagAttributes> implements TagAttributes {
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
-  // public tagCategoryId!: string | null;
 
   public static associate(models: any) {
+    this.hasMany(models.UserTagPreferenceModel, {
+      foreignKey: "tagId",
+      as: "tagPreferences",
+    });
+
     this.belongsTo(models.TagCategory, {
       foreignKey: "tagCategoryId",
       as: "category",

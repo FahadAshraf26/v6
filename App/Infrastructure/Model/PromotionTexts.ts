@@ -9,7 +9,6 @@ export class PromotionText
   extends Model<PromotionTextAttributes>
   implements PromotionTextAttributes
 {
-  // These properties are explicitly declared for TypeScript's benefit.
   public promotionTextId!: string;
   public configuration!: any | null;
   public readonly createdAt!: Date;

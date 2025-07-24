@@ -15,7 +15,6 @@ export class UserDocument
   extends Model<UserDocumentAttributes>
   implements UserDocumentAttributes
 {
-  // These properties are explicitly declared for TypeScript's benefit.
   public userDocumentId!: string;
   public documentType!: string;
   public name!: string;

@@ -9,7 +9,6 @@ export class TagCategory
   extends Model<TagCategoryAttributes>
   implements TagCategoryAttributes
 {
-  // These properties are explicitly declared for TypeScript's benefit.
   public tagCategoryId!: string;
   public category!: string;
   public readonly createdAt!: Date;

@@ -1,26 +1,22 @@
-import { Model, DataTypes, Sequelize } from "sequelize";
+import { Model, Sequelize } from "sequelize";
 import EncryptionService from "../Service/EncryptionService/EncryptionService";
 
-// Interface for type-safety on instance attributes
 interface InvestorCardAttributes {
   investorCardId: string;
   creditCardName: string | null;
   cardType: string | null;
   lastFour: string | null;
   isStripeCard: boolean;
-  // Attributes used in methods but not originally defined
   creditCardNumber: string | null;
   expirationDate: string | null;
   cvvNumber: string | null;
   investorPaymentOptionsId?: string;
 }
 
-// Extend Sequelize's Model class and implement our attributes interface
 export class InvestorCard
   extends Model<InvestorCardAttributes>
   implements InvestorCardAttributes
 {
-  // --- TYPE DEFINITIONS ---
   public investorCardId!: string;
   public creditCardName!: string | null;
   public cardType!: string | null;
@@ -30,30 +26,18 @@ export class InvestorCard
   public expirationDate!: string | null;
   public cvvNumber!: string | null;
 
-  // This foreign key is added by the association
   public investorPaymentOptionsId!: string;
 
-  // Timestamps
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
   public readonly deletedAt!: Date;
 
-  // --- STATIC ASSOCIATE METHOD ---
   public static associate(models: any) {
-    // Note: `...Model` suffixes are removed, and `InvestorCardModel` is replaced with `this`.
     this.belongsTo(models.InvestorPaymentOption, {
       foreignKey: "investorPaymentOptionsId",
     });
-
-    // Preserving commented-out association
-    // models.InvestorPaymentOption.hasOne(this, {
-    //     foreignKey: 'investorPaymentOptionsId',
-    //     as: 'card',
-    // });
   }
 
-  // --- INSTANCE METHODS ---
-  // Note: Typo 'encrpyt' is corrected to 'encrypt'
   public encrypt() {
     try {
       if (this.creditCardNumber) {
@@ -70,7 +54,7 @@ export class InvestorCard
         this.cvvNumber = EncryptionService.encryptBankDetails(this.cvvNumber);
       }
     } catch (err) {
-      console.error(err); // Good practice to log errors
+      console.error(err);
     }
   }
 
@@ -95,11 +79,9 @@ export class InvestorCard
   }
 }
 
-// The exported initialization function
 export default (sequelize: Sequelize, DataTypes: any) => {
   InvestorCard.init(
     {
-      // --- RUNTIME DEFINITIONS ---
       investorCardId: {
         type: DataTypes.STRING,
         primaryKey: true,
@@ -109,31 +91,27 @@ export default (sequelize: Sequelize, DataTypes: any) => {
       cardType: { type: DataTypes.STRING },
       lastFour: { type: DataTypes.STRING },
       isStripeCard: { type: DataTypes.BOOLEAN, defaultValue: false },
-      // Adding attributes that were used in methods but missing from the definition
       creditCardNumber: { type: DataTypes.STRING },
       expirationDate: { type: DataTypes.STRING },
       cvvNumber: { type: DataTypes.STRING },
     },
     {
-      // --- Model Options ---
       sequelize,
       modelName: "InvestorCard",
-      tableName: "investorCards", // Explicitly set table name
+      tableName: "investorCards",
       timestamps: true,
       paranoid: true,
-      // --- HOOKS ---
       hooks: {
         beforeCreate(investorCard: InvestorCard) {
-          investorCard.encrypt(); // Corrected method name
+          investorCard.encrypt();
         },
         beforeUpdate(investorCard: InvestorCard) {
-          // Check if sensitive fields changed to prevent re-encrypting already encrypted data
           if (
             investorCard.changed("creditCardNumber") ||
             investorCard.changed("expirationDate") ||
             investorCard.changed("cvvNumber")
           ) {
-            investorCard.encrypt(); // Corrected method name
+            investorCard.encrypt();
           }
         },
         afterFind(result: InvestorCard | InvestorCard[] | null) {

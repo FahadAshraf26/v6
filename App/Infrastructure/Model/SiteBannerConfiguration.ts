@@ -9,7 +9,6 @@ export class SiteBannerConfiguration
   extends Model<SiteBannerConfigurationAttributes>
   implements SiteBannerConfigurationAttributes
 {
-  // These properties are explicitly declared for TypeScript's benefit.
   public siteBannerConfigurationId!: string;
   public configuration!: any | null;
   public readonly createdAt!: Date;
