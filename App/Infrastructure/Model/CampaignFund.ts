@@ -14,6 +14,7 @@ interface CampaignFundAttributes {
   chargeId?: string;
   investorId?: string;
   campaignId?: string;
+  note?: string;
 }
 
 export class CampaignFund
@@ -30,6 +31,7 @@ export class CampaignFund
   public entityId!: string | null;
   public promotionCredits!: number | null;
   public netAmount!: number | null;
+  public note!: string | null;
 
   public chargeId!: string;
   public investorId!: string;
@@ -111,6 +113,10 @@ export default (sequelize: Sequelize, DataTypes: any) => {
       },
       netAmount: {
         type: DataTypes.FLOAT,
+      },
+      note: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
     },
     {
